@@ -1,0 +1,19 @@
+CREATE OR ALTER PROCEDURE ModificarTipoPago
+    @ID_TIPO INT,
+    @TIPO_DE_PAGO VARCHAR(100),
+    @MONTO_DE_PAGO NUMERIC(9)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE ORDENES_TIPOS_DE_PAGO
+    SET TIPO_DE_PAGO = @TIPO_DE_PAGO,
+        MONTO_DE_PAGO = @MONTO_DE_PAGO
+    WHERE ID_TIPO = @ID_TIPO;
+
+    IF @@ROWCOUNT = 0
+    BEGIN
+        RAISERROR('No se encontró el tipo de pago con ID %d.', 16, 1, @ID_TIPO);
+    END
+END;
+GO

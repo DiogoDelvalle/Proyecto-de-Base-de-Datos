@@ -1,0 +1,16 @@
+/*4.Informe de facturas de compra pendientes de pago, desplegar los atributos: Factura,
+fecha, c�digo y nombre del proveedor, total de la factura y saldo de la factura.*/
+SELECT 
+  f.ID_FACTURAS AS CODIGO_FACTURA,
+  f.FECHA_COMPRA AS FECHA,
+  p.ID_PROVEEDORES AS CODIGO_PROVEEDOR,
+  p.NOMBRE AS PROVEEDOR,
+  f.TOTAL AS TOTAL_FACTURA,
+  f.TOTAL - ISNULL(SUM(dop.TOTAL), 0) AS SALDO
+FROM FACTURAS f
+JOIN PROVEEDORES p ON f.ID_PROVEEDORES = p.ID_PROVEEDORES
+LEFT JOIN DETALLES_DE_ORDENES_DE_PAGO dop ON f.ID_FACTURAS = dop.ID_FACTURAS
+GROUP BY f.ID_FACTURAS, f.FECHA_COMPRA, p.ID_PROVEEDORES, p.NOMBRE, f.TOTAL
+HAVING f.TOTAL - ISNULL(SUM(dop.TOTAL), 0) > 0
+ORDER BY f.ID_FACTURAS;
+GO
